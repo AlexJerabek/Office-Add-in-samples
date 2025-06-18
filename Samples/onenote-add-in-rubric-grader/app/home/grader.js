@@ -7,9 +7,9 @@
     "use strict";
     
     // Define the configurable grading criteria and score values.
-    var criteria = ['Content', 'Organization', 'Style', 'Grammar'];
-    var score = [0,1,2,3,4,5,6,7,8,9,10];
-    var defaultValue = 5;
+    const criteria = ['Content', 'Organization', 'Style', 'Grammar'];
+    const score = [0,1,2,3,4,5,6,7,8,9,10];
+    const defaultValue = 5;
     
     // The initialize function is run each time the page is loaded.
     Office.initialize = function (reason) {
@@ -31,8 +31,8 @@
     function populatePagePickerDropDown() {
         OneNote.run(function (context) {
             
-            // Get the id and title of the pages in the current section.
-            var pages = context.application.getActiveSection().pages;
+            // Get the ID and title of the pages in the current section.
+            const pages = context.application.getActiveSection().pages;
             
             // Queue a command to load the id and title for each page.            
             pages.load('id,title');
@@ -41,17 +41,17 @@
             return context.sync()
                 .then(function () {
                     
-                    // Get the id and title of each page, add them as picker options.                  
-                    var dropdown = $('#page-picker');
+                    // Get the ID and title of each page, add them as picker options.                  
+                    const dropdown = $('#page-picker');
                     $.each(pages.items, function(index, object) {
-                        var pageId = object.id;
-                        var pageTitle = object.title;
+                        let pageId = object.id;
+                        let pageTitle = object.title;
                         
-                        if (index === 0)
-                        {
+                        if (index === 0) {
                             dropdown.append($('<option selected>').val(pageId).html(pageTitle));
+                        } else { 
+                            dropdown.append($('<option>').val(pageId).html(pageTitle));
                         }
-                        else dropdown.append($('<option>').val(pageId).html(pageTitle));
                     });
                     
                     // Transform the <select> control to an Office UI Fabric dropdown.
@@ -68,17 +68,17 @@
         OneNote.run(function (context) {
         
             // Get the collection of pageContent items from the page.
-            var pageContents = context.application.getActivePage().contents;
+            const pageContents = context.application.getActivePage().contents;
             
             // Queue a command to load the outline property of each pageContent.
             pageContents.load('outline');
             
             // Get the outline on the page.
             // This sample assumes there's only one pageContent on the page with one outline. 
-            var pageContent = pageContents.getItem(0);
+            const pageContent = pageContents.getItem(0);
             
             // Get the paragraphs in the outline.
-            var paragraphs = pageContent.outline.paragraphs;
+            const paragraphs = pageContent.outline.paragraphs;
             
             // Queue a command to load the type and richText property of each paragraph.
             paragraphs.load('type,richText');
@@ -88,7 +88,7 @@
                 .then(function () {
                     
                     // Get the richText.text from each paragraph.                    
-                    var textContent = '';
+                    let textContent = '';
                     $.each(paragraphs.items, function(index, object) {
                         if (object.type === 'RichText') { 
                             textContent += object.richText.text;
@@ -96,8 +96,8 @@
                     });
                     
                     // Get the word and sentence count and write them to the page.
-                    var words = textContent.split(' ');
-                    var sentences = textContent.split('. ');                    
+                    let words = textContent.split(' ');
+                    let sentences = textContent.split('. ');                    
                     $('#wordCount').text('Words: ' + words.length);
                     $('#sentenceCount').text('Sentences: ' + sentences.length);
                 })                
@@ -112,10 +112,10 @@
         OneNote.run(function (context) {
             
             // Get the current page.
-            var page = context.application.getActivePage();
+            const page = context.application.getActivePage();
                        
             // Add an outline with the specified HTML to the page.
-            var outline = page.addOutline(560, 70, html);
+            page.addOutline(560, 70, html);
             
             // Run the queued commands, and return a promise to indicate task completion.
             return context.sync()
@@ -130,7 +130,7 @@
         OneNote.run(function (context) {
             
             // Get the pages in the current section.
-            var pages = context.application.getActiveSection().pages;
+            const pages = context.application.getActiveSection().pages;
             
             // Queue a command to load the page collection.            
             pages.load('id');
@@ -140,8 +140,8 @@
                 .then(function () {
                     
                     // Get the page with the specified ID from the collection.
-                    var selectedPageId = $('#page-picker option:selected').val();
-                    var page;
+                    const selectedPageId = $('#page-picker option:selected').val();
+                    let page;
                     $.each(pages.items, function(index, object) {
                         if (object.id === selectedPageId) {
                             page = object;
@@ -166,8 +166,8 @@
     // Populates the scoring dropdowns with the score values.
     function populateScoringDropDowns() {
         $.each(criteria, function(index, value) {
-            var name = value.toLowerCase();
-            var dropdown = $('#' + name);
+            const name = value.toLowerCase();
+            const dropdown = $('#' + name);
             $.each(score, function (index) {
                 if (index === defaultValue)
                 {
@@ -183,12 +183,12 @@
         
     // Get the scores, calculate the grade, and return the results as an HTML table.         
     function createGrade() {        
-        var totalScore = 0;
+        let totalScore = 0;
         
         // Create the HTML table that displays the grade. 
         // This string will be passed to the page.addOutline method.
-        var table = '<table border=1><tr><td>GRADE</td><td><b>{0}%</b></td></tr>{1}</table>';
-        var rows = '';
+        let table = '<table border=1><tr><td>GRADE</td><td><b>{0}%</b></td></tr>{1}</table>';
+        let rows = '';
         
         // Get each score and add it to the running total.
         $.each(criteria, function(index, value) {
@@ -199,7 +199,7 @@
         });
         
         // If there's a comment, add it to the table.
-        var comments = $('#commentBox').val();
+        let comments = $('#commentBox').val();
         if (comments) {
             rows += '<tr><td>Comments</td><td><i>' + comments + '</i></td></tr>';
         }
